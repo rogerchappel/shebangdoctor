@@ -1,57 +1,35 @@
 # Security Policy
 
+ShebangDoctor is a local CLI that reads files and, only with explicit flags, edits script line endings or executable bits.
+
 ## Supported Versions
 
-Replace this section with the supported versions for `shebangdoctor`.
-
-Example:
-
-```md
-| Version | Supported |
-| --- | --- |
-| .x | Yes |
-| < .0 | No |
-```
-
-If the project does not publish versioned releases yet, say that clearly.
+No stable public release exists yet. Until 1.0, security fixes land on `main` and the latest npm release when publishing begins.
 
 ## Reporting a Vulnerability
 
 Please do not report suspected vulnerabilities in public issues, pull requests, or discussions.
 
-Ask maintainers for the private security reporting path before sharing details.
-
-If no private reporting path exists yet, ask maintainers through public project channels for a private reporting path. Do not include exploit details, secrets, personal data, or sensitive technical details in public messages.
-
-## What to Include
-
-When a private reporting path is available, include:
-
-- A clear description of the issue.
-- Affected versions, files, packages, workflows, or configuration.
-- Steps to reproduce, proof of concept, or attack scenario when safe to share.
-- Potential impact.
-- Suggested mitigation, if known.
-
-## Response Expectations
-
-Maintainers review good-faith reports as capacity allows.
-
-Do not imply paid support, guaranteed response times, guaranteed fixes, or service-level agreements unless `shebangdoctor` explicitly provides them.
+Use GitHub private vulnerability reporting when it is enabled for the repository. If it is not enabled, open a public issue asking for a private reporting path without including exploit details, secrets, personal data, or sensitive technical details.
 
 ## Scope
 
 In scope:
 
-- Vulnerabilities in shebangdoctor.
-- Insecure default configuration shipped by this project.
-- CI, release, or dependency guidance maintained by this project.
+- Unsafe file mutation behavior in `--fix` or `--executable`.
+- Path traversal, symlink, or candidate discovery behavior that edits files outside the requested scan area.
+- Insecure CI or release configuration maintained by this project.
+- Dependency vulnerabilities in shipped runtime code.
 
 Out of scope:
 
 - General support requests.
-- Requests for guaranteed maintenance timelines.
-- Issues in unrelated downstream projects.
+- Findings in downstream repositories scanned by ShebangDoctor.
+- Reports that require installing untrusted third-party scripts outside this project.
+
+## Safe Reproduction
+
+Use throwaway fixture directories where possible. Do not send private repositories, credentials, or production scripts unless maintainers explicitly provide a secure path and ask for them.
 
 ## Disclosure
 
