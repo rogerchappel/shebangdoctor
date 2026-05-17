@@ -5,10 +5,10 @@ This file defines how AI agents and human maintainers should work in `shebangdoc
 ## Project Context
 
 - Project: `shebangdoctor`
-- Repository: ``
-- Primary maintainer: ``
-- Default branch: ``
-- Package manager: ``
+- Repository: `https://github.com/rogerchappel/shebangdoctor`
+- Primary maintainer: `Roger Chappel`
+- Default branch: `main`
+- Package manager: `npm`
 - Primary verification command: `bash scripts/validate.sh`
 
 ## Core Principle
@@ -173,4 +173,7 @@ Never commit secrets. Never mutate production data unless explicitly instructed.
 
 ## Repository-Specific Notes
 
-
+- Default CLI behavior is read-only.
+- `--fix` may normalize CRLF endings in detected scripts.
+- `--fix --executable` may chmod detected shebang scripts.
+- Do not add automatic shebang rewrites without updating safety docs and tests.
