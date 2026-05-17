@@ -31,7 +31,7 @@ async function main(argv: string[]): Promise<number> {
 
 async function readVersion(): Promise<string> {
   const here = path.dirname(fileURLToPath(import.meta.url));
-  const packagePath = path.resolve(here, "../package.json");
+  const packagePath = path.resolve(here, "../../package.json");
   const pkg = JSON.parse(await readFile(packagePath, "utf8")) as { version?: string };
   return pkg.version ?? "0.0.0";
 }

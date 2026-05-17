@@ -4,14 +4,14 @@
   "description": "Audit and fix script shebang, executable bit, CRLF, and interpreter portability issues.",
   "type": "module",
   "bin": {
-    "shebangdoctor": "./dist/cli.js"
+    "shebangdoctor": "./dist/src/cli.js"
   },
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/src/index.js",
+  "types": "./dist/src/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
+      "types": "./dist/src/index.d.ts",
+      "default": "./dist/src/index.js"
     }
   },
   "files": [

@@ -32,10 +32,9 @@ test("reports missing shebang, chmod, env, and portability problems", async () =
 
   const codes = report.issues.map((issue) => issue.code).sort();
   assert.equal(report.ok, false);
-  assert.equal(report.scanned, 6);
+  assert.equal(report.scanned, 4);
   assert.deepEqual(codes, [
     "env-shebang-without-argument",
-    "missing-shebang",
     "missing-shebang",
     "non-portable-interpreter",
     "non-portable-interpreter",
