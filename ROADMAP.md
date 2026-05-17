@@ -1,38 +1,29 @@
 # Roadmap
 
-This roadmap describes intended direction, not a binding delivery promise.
-Review it regularly and update it as the project learns from users,
-contributors, and implementation constraints.
+This roadmap describes intended direction, not a delivery promise.
 
 ## Now
 
-- Define the smallest useful project scope.
-- Keep repository setup, documentation, and verification easy for contributors
-  to follow.
-- Ship small, reviewable improvements.
+- Stabilize the MVP scanner behavior against real repositories.
+- Keep default operation read-only and predictable.
+- Improve examples for CI and agentic workflows.
 
 ## Next
 
-- Add the next capabilities that directly support the project's primary users.
-- Improve tests, docs, and examples around the most used workflows.
-- Reduce setup friction discovered during early use.
+- Add `--fail-on warning|error` for teams that want warnings without failed builds.
+- Add ignore pattern support for generated directories.
+- Suggest common shebang replacements without rewriting files automatically.
+- Publish GitHub Actions examples after the first public feedback pass.
 
 ## Later
 
-- Consider larger features after the core workflow is stable.
-- Add automation only where it removes repeated maintainer work.
-- Revisit packaging, deployment, or integration options based on real demand.
+- Consider a config file if command flags become too noisy.
+- Add richer JSON metadata for editor integrations.
+- Explore package manager recipes once release demand is clear.
 
 ## Not Planned
 
-- Unrelated platform rewrites without a clear migration path.
-- Mandatory dependencies on a single ecosystem unless the project requires it.
-- Public release dates before maintainers are ready to commit to them.
-
-## Roadmap Review
-
-Before each major or meaningful minor release:
-
-- Move completed user-visible work into `CHANGELOG.md`.
-- Remove stale commitments.
-- Promote only the next reviewable set of work into `Now`.
+- Full shell parsing.
+- Installing or resolving interpreters.
+- Automatic shebang rewrites in V1.
+- Network calls during scans.
