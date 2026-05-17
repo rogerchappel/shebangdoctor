@@ -9,7 +9,12 @@ format and uses semantic versioning when versioned releases are published.
 
 ### Added
 
-- Initial project setup.
+- TypeScript CLI for auditing script shebang, executable bit, CRLF, and interpreter portability issues.
+- Human and JSON report formats.
+- Safe `--fix` mode for CRLF normalization.
+- Separate `--executable` opt-in for chmod fixes.
+- Fixture-backed tests and real CLI smoke coverage.
+- Orchestration, safety, and examples documentation.
 
 ## Release Links
 
