@@ -1,6 +1,6 @@
 # ShebangDoctor PRD
 
-Status: in-progress
+Status: MVP implemented
 
 ## Summary
 
@@ -23,6 +23,10 @@ Developer and agent-generated repos often accumulate scripts with mismatched exe
 - Output human text and JSON.
 - Support --fix for safe changes: normalize CRLF and apply executable mode only when configured.
 - Provide fixture-backed tests and a real CLI smoke.
+
+## MVP Notes
+
+The implemented MVP keeps shebang rewrites manual. This is deliberate: interpreter choice depends on target systems, shell policy, and whether `env -S` is acceptable for the repo.
 
 ## Non-goals
 
