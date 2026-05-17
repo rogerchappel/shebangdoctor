@@ -1,0 +1,32 @@
+{
+  "name": "shebangdoctor",
+  "purpose": "Audit script shebang, executable bit, CRLF, and interpreter portability issues.",
+  "defaultMode": "read-only",
+  "entrypoints": {
+    "cli": "shebangdoctor [options] [path ...]",
+    "json": "shebangdoctor --json .",
+    "safeFix": "shebangdoctor --fix .",
+    "chmodFix": "shebangdoctor --fix --executable ."
+  },
+  "safety": {
+    "mutatesByDefault": false,
+    "crlfFixRequires": ["--fix"],
+    "chmodFixRequires": ["--fix", "--executable"],
+    "automaticShebangRewrite": false
+  },
+  "verification": [
+    "npm test",
+    "npm run check",
+    "npm run build",
+    "npm run smoke",
+    "bash scripts/validate.sh"
+  ],
+  "topics": [
+    "cli",
+    "developer-tools",
+    "shebang",
+    "scripts",
+    "ci",
+    "agentic-workflows"
+  ]
+}
