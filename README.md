@@ -71,8 +71,19 @@ npm test
 npm run check
 npm run build
 npm run smoke
+npm run package:smoke
+npm run release:check
 bash scripts/validate.sh
 ```
+
+`npm run release:check` runs the compiled test suite, TypeScript check, smoke
+fixture, and npm pack dry-run used to verify release readiness.
+
+## Package Contents
+
+The npm package includes the compiled CLI, README, docs, license, changelog,
+contributing guide, and security policy. Run `npm run package:smoke` to inspect
+the exact tarball before publishing.
 
 ## Docs
 
