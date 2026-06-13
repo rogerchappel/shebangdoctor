@@ -29,7 +29,7 @@ npx shebangdoctor .
 Print JSON for CI or agent workflows:
 
 ```sh
-npx shebangdoctor --json .
+npx shebangdoctor --json . 
 ```
 
 Normalize CRLF line endings in detected scripts:
@@ -43,6 +43,14 @@ Normalize CRLF and add executable bits to shebang scripts:
 ```sh
 npx shebangdoctor --fix --executable .
 ```
+
+Run the repository fixture demo:
+
+```sh
+bash demo/run-script-audit.sh
+```
+
+See [Clean Script Footguns Before CI](docs/tutorials/clean-script-footguns.md) for a complete walkthrough.
 
 ## What It Checks
 
