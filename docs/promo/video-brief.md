@@ -6,10 +6,18 @@ Show a tiny CI failure class that is easy to miss in review: scripts that look f
 
 ## 60-second flow
 
-1. Run `node dist/src/cli.js --json test/fixtures/problem` and show stable issue codes.
-2. Run `node dist/src/cli.js test/fixtures/healthy` to show the clean path.
-3. Copy the problem fixture to `/tmp` and run `--fix --executable` to demonstrate explicit cleanup.
-4. Close on the safety model: default mode is read-only; chmod requires the extra `--executable` flag.
+1. Run `bash demo/run-script-audit.sh`.
+2. Open the printed `problem-report.json` path and show stable issue codes such as `not-executable` and `non-portable-interpreter`.
+3. Open the printed `fix-report.txt` path to show controlled cleanup.
+4. Run `node dist/src/cli.js test/fixtures/healthy` to show the clean path.
+5. Close on the safety model: default mode is read-only; chmod requires the extra `--executable` flag.
+
+## Grounded Demo Assets
+
+- Demo wrapper: `demo/run-script-audit.sh`
+- Problem fixture: `test/fixtures/problem`
+- Healthy fixture: `test/fixtures/healthy`
+- Tutorial: `docs/tutorials/clean-script-footguns.md`
 
 ## Claims to avoid
 
