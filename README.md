@@ -68,9 +68,14 @@ ShebangDoctor does not rewrite shebangs in V1. It reports portability warnings s
 
 ## Exit Codes
 
-- `0`: no issues, or fixes completed.
-- `1`: issues found in read-only mode.
+- `0`: the reported state is clean. In fix mode, all detected issues were resolved.
+- `1`: issues remain. This includes read-only findings, manual-only findings in
+  fix mode, and files that were only partially fixed.
 - `2`: usage or runtime error.
+
+Human and JSON output describe the post-fix state: applied changes appear in
+`Fixes applied`/`fixes`, unresolved findings remain in `Remaining issues`/`issues`,
+and JSON `ok` is `true` exactly when the exit code is `0`.
 
 ## Verify
 
