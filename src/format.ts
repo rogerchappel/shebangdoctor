@@ -12,7 +12,7 @@ export function formatText(report: ScanReport): string {
     lines.push("No shebang, mode, CRLF, or portability issues found.");
   } else {
     lines.push("");
-    lines.push("Issues:");
+    lines.push(report.fixes.length > 0 ? "Remaining issues:" : "Issues:");
     for (const issue of report.issues) {
       const fixable = issue.fixable ? "fixable" : "manual";
       lines.push(`- [${issue.severity}] ${issue.path}: ${issue.code} (${fixable})`);
@@ -28,9 +28,11 @@ export function formatText(report: ScanReport): string {
     }
   }
 
-  if (report.issues.length > 0 && report.fixes.length === 0) {
+  if (report.issues.length > 0) {
     lines.push("");
-    lines.push("Run with --fix to normalize CRLF. Add --executable to chmod shebang scripts.");
+    lines.push(report.fixes.length > 0
+      ? "Some issues require manual changes or --executable."
+      : "Run with --fix to normalize CRLF. Add --executable to chmod shebang scripts.");
   }
 
   return lines.join("\n");

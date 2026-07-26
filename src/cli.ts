@@ -22,11 +22,7 @@ async function main(argv: string[]): Promise<number> {
   const report = await scan(options);
   console.log(options.json ? formatJson(report) : formatText(report));
 
-  if (report.issues.length === 0 || options.fix) {
-    return 0;
-  }
-
-  return 1;
+  return report.ok ? 0 : 1;
 }
 
 async function readVersion(): Promise<string> {
