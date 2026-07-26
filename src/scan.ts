@@ -18,10 +18,13 @@ export async function scan(options: ScanOptions): Promise<ScanReport> {
 
     scanned += 1;
     const candidateIssues = detectIssues(candidate);
-    issues.push(...candidateIssues);
 
     if (options.fix) {
       fixes.push(...await applyFixes(candidate, candidateIssues, options.executable));
+      const updatedCandidate = await readCandidate(options.root, file);
+      issues.push(...(updatedCandidate ? detectIssues(updatedCandidate) : candidateIssues));
+    } else {
+      issues.push(...candidateIssues);
     }
   }
 
