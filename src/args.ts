@@ -68,7 +68,7 @@ Usage:
 Options:
   --json          Print a machine-readable report.
   --fix           Normalize CRLF line endings in detected scripts.
-  --executable    With --fix, chmod shebang scripts that are missing executable bits.
+  --executable    With --fix, add execute bits (0111) while preserving existing permissions.
   -h, --help      Show help.
   -v, --version   Show version.
 

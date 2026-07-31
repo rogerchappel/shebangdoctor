@@ -22,7 +22,7 @@ This normalizes CRLF line endings in detected script files.
 shebangdoctor --fix --executable .
 ```
 
-This also applies executable bits to shebang scripts that are missing them.
+This adds the user, group, and other execute bits (`0111`) to shebang scripts that are missing them. Existing read, write, and special permission bits are preserved.
 
 ## Manual Decisions
 
