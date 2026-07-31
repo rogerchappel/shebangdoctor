@@ -19,8 +19,8 @@ export async function applyFixes(candidate: CandidateScript, issues: Issue[], ex
   }
 
   if (executable && issues.some((issue) => issue.code === "not-executable")) {
-    const before = candidate.mode & 0o777;
-    const after = before | 0o755;
+    const before = candidate.mode & 0o7777;
+    const after = before | 0o111;
     if (after !== before) {
       await fs.chmod(candidate.path, after);
       actions.push({
@@ -36,5 +36,5 @@ export async function applyFixes(candidate: CandidateScript, issues: Issue[], ex
 }
 
 function formatMode(mode: number): string {
-  return `0${(mode & 0o777).toString(8)}`;
+  return `0${(mode & 0o7777).toString(8).padStart(3, "0")}`;
 }
