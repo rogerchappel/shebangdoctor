@@ -27,10 +27,12 @@ export function isScriptLikePath(relative: string): boolean {
   const extension = path.extname(normalized);
   const basename = path.basename(normalized);
   const parent = path.dirname(normalized);
-  const firstDirectory = normalized.split("/")[0] ?? "";
+  const parentWithBoundaries = `/${parent}/`;
+  const isInScriptDirectory = [...SCRIPT_DIRECTORIES].some((directory) =>
+    parentWithBoundaries.includes(`/${directory}/`)
+  );
 
   return SCRIPT_EXTENSIONS.has(extension) ||
     TEXT_SCRIPT_FILENAMES.has(basename) ||
-    SCRIPT_DIRECTORIES.has(parent) ||
-    SCRIPT_DIRECTORIES.has(firstDirectory);
+    (extension === "" && isInScriptDirectory);
 }

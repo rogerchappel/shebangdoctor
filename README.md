@@ -54,7 +54,7 @@ See [Clean Script Footguns Before CI](docs/tutorials/clean-script-footguns.md) f
 
 ## What It Checks
 
-- Script-like files without shebangs.
+- Script-like files without shebangs, including extensionless files nested anywhere under conventional `bin`, `script(s)`, `tool(s)`, or `.github/scripts` directories.
 - Shebang scripts that are not executable.
 - CRLF line endings in scripts.
 - Absolute interpreter paths that are likely non-portable.

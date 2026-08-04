@@ -3,9 +3,26 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
+import { isScriptLikePath } from "../src/path-utils.js";
 import { scan } from "../src/scan.js";
 
 const fixturesRoot = path.resolve("test/fixtures");
+
+test("recognizes conventional script directories at any nesting depth", () => {
+  for (const candidate of [
+    "packages/app/bin/deploy",
+    "packages/app/script/deploy",
+    "packages/app/scripts/deploy",
+    "packages/app/tool/deploy",
+    "packages/app/tools/deploy",
+    "packages/app/.github/scripts/deploy"
+  ]) {
+    assert.equal(isScriptLikePath(candidate), true, candidate);
+  }
+
+  assert.equal(isScriptLikePath("packages/app/notes/release"), false);
+  assert.equal(isScriptLikePath("packages/app/scripts/README.txt"), false);
+});
 
 test("reports a healthy fixture tree as clean", async () => {
   const report = await scan({
@@ -39,6 +56,29 @@ test("reports missing shebang, chmod, env, and portability problems", async () =
     "non-portable-interpreter",
     "non-portable-interpreter",
     "not-executable"
+  ]);
+});
+
+test("scans extensionless files in nested script directories but ignores ordinary extensionless files", async () => {
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), "shebangdoctor-"));
+  const nestedScript = path.join(root, "packages", "app", "scripts", "deploy");
+  const ordinaryFile = path.join(root, "packages", "app", "notes", "release");
+  await fs.mkdir(path.dirname(nestedScript), { recursive: true });
+  await fs.mkdir(path.dirname(ordinaryFile), { recursive: true });
+  await fs.writeFile(nestedScript, "echo deploy\n", "utf8");
+  await fs.writeFile(ordinaryFile, "release notes\n", "utf8");
+
+  const report = await scan({
+    root,
+    paths: ["."],
+    fix: false,
+    executable: false,
+    json: false
+  });
+
+  assert.equal(report.scanned, 1);
+  assert.deepEqual(report.issues.map(({ code, path: issuePath }) => ({ code, path: issuePath })), [
+    { code: "missing-shebang", path: "packages/app/scripts/deploy" }
   ]);
 });
 
