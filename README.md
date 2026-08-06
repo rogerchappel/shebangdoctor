@@ -7,8 +7,11 @@ ShebangDoctor audits scripts for the boring failures that waste real time: missi
 ## Install
 
 ```sh
-npm install --save-dev shebangdoctor
+npm install --save-dev github:rogerchappel/shebangdoctor
 ```
+
+ShebangDoctor is distributed from GitHub rather than the npm registry. The Git
+dependency builds the CLI during installation.
 
 During development in this repo:
 
@@ -23,25 +26,25 @@ node dist/src/cli.js .
 Scan the current repo:
 
 ```sh
-npx shebangdoctor .
+./node_modules/.bin/shebangdoctor .
 ```
 
 Print JSON for CI or agent workflows:
 
 ```sh
-npx shebangdoctor --json . 
+./node_modules/.bin/shebangdoctor --json .
 ```
 
 Normalize CRLF line endings in detected scripts:
 
 ```sh
-npx shebangdoctor --fix .
+./node_modules/.bin/shebangdoctor --fix .
 ```
 
 Normalize CRLF and add executable bits to shebang scripts:
 
 ```sh
-npx shebangdoctor --fix --executable .
+./node_modules/.bin/shebangdoctor --fix --executable .
 ```
 
 Run the repository fixture demo:
@@ -85,18 +88,20 @@ npm run check
 npm run build
 npm run smoke
 npm run package:smoke
+npm run documented-install:smoke
 npm run release:check
 bash scripts/validate.sh
 ```
 
 `npm run release:check` runs the compiled test suite, TypeScript check, smoke
-fixture, and npm pack dry-run used to verify release readiness.
+fixture, package inspection, and a clean consumer install that exercises the
+documented CLI entry point.
 
-## Package Contents
+## Release Archive Contents
 
-The npm package includes the compiled CLI, README, docs, license, changelog,
-contributing guide, and security policy. Run `npm run package:smoke` to inspect
-the exact tarball before publishing.
+The GitHub release archive includes the compiled CLI, README, docs, license,
+changelog, contributing guide, and security policy. Run `npm run package:smoke`
+to inspect the exact tarball attached to a release.
 
 ## Docs
 

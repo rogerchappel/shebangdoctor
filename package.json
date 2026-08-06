@@ -24,12 +24,14 @@
     "docs"
   ],
   "scripts": {
+    "prepare": "npm run build",
     "build": "tsc -p tsconfig.json",
     "check": "tsc -p tsconfig.json --noEmit",
     "test": "npm run build && node --test dist/test/*.test.js",
     "smoke": "bash scripts/smoke.sh",
     "package:smoke": "npm pack --dry-run",
-    "release:check": "npm test && npm run check && npm run build && npm run smoke && npm run package:smoke"
+    "documented-install:smoke": "bash scripts/documented-install-smoke.sh",
+    "release:check": "npm test && npm run check && npm run build && npm run smoke && npm run package:smoke && npm run documented-install:smoke"
   },
   "keywords": [
     "cli",
