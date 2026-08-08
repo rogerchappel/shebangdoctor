@@ -7,6 +7,12 @@ format and uses semantic versioning when versioned releases are published.
 
 ## [Unreleased]
 
+### Fixed
+
+- Deduplicate files discovered through repeated or overlapping CLI paths.
+- Report `/usr/bin/env -S` without a following interpreter as a missing env
+  argument while preserving valid split-string shebangs.
+
 ### Added
 
 - TypeScript CLI for auditing script shebang, executable bit, CRLF, and interpreter portability issues.
