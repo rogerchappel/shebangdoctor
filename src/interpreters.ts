@@ -47,8 +47,8 @@ export function analyzeShebang(firstLine: string): ShebangAnalysis | null {
   const parts = command.split(/\s+/);
   const interpreter = parts[0] ?? "";
   const usesEnv = interpreter === "/usr/bin/env";
-  const envHasArgument = usesEnv && parts.length > 1;
   const envCommand = usesEnv && parts[1] === "-S" ? parts[2] : parts[1];
+  const envHasArgument = usesEnv && Boolean(envCommand);
 
   return {
     interpreter,

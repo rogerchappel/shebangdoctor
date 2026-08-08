@@ -8,10 +8,19 @@ test("recognizes env shebangs with portable interpreter names", () => {
 });
 
 test("flags env shebangs without an interpreter argument", () => {
-  const analysis = analyzeShebang("#!/usr/bin/env");
+  for (const shebang of ["#!/usr/bin/env", "#!/usr/bin/env -S"]) {
+    const analysis = analyzeShebang(shebang);
+    assert.equal(analysis?.usesEnv, true, shebang);
+    assert.equal(analysis?.envHasArgument, false, shebang);
+    assert.equal(analysis?.portable, false, shebang);
+  }
+});
+
+test("recognizes env -S shebangs followed by an interpreter", () => {
+  const analysis = analyzeShebang("#!/usr/bin/env -S node --no-warnings");
   assert.equal(analysis?.usesEnv, true);
-  assert.equal(analysis?.envHasArgument, false);
-  assert.equal(analysis?.portable, false);
+  assert.equal(analysis?.envHasArgument, true);
+  assert.equal(analysis?.portable, true);
 });
 
 test("flags uncommon absolute interpreter paths", () => {
