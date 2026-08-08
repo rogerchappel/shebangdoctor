@@ -38,6 +38,20 @@ test("reports a healthy fixture tree as clean", async () => {
   assert.deepEqual(report.issues, []);
 });
 
+test("scans canonical files once across overlapping inputs", async () => {
+  const report = await scan({
+    root: fixturesRoot,
+    paths: ["healthy", "healthy/bin", "problem", "problem/bin"],
+    fix: false,
+    executable: false,
+    json: false
+  });
+
+  assert.equal(report.scanned, 5);
+  assert.equal(report.issues.length, 5);
+  assert.equal(new Set(report.issues.map((issue) => `${issue.path}:${issue.code}`)).size, 5);
+});
+
 test("reports missing shebang, chmod, env, and portability problems", async () => {
   const report = await scan({
     root: fixturesRoot,
@@ -140,6 +154,26 @@ test("fix mode normalizes CRLF and adds execute bits without changing other perm
       after: "04711"
     }
   ]);
+});
+
+test("fix mode applies each change once across overlapping inputs", async () => {
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), "shebangdoctor-"));
+  const script = path.join(root, "bin", "cleanable.sh");
+  await fs.mkdir(path.dirname(script), { recursive: true });
+  await fs.writeFile(script, "#!/usr/bin/env sh\r\nprintf 'hello'\r\n", "utf8");
+  await fs.chmod(script, 0o644);
+
+  const report = await scan({
+    root,
+    paths: [".", "bin", "bin/cleanable.sh"],
+    fix: true,
+    executable: true,
+    json: false
+  });
+
+  assert.equal(report.scanned, 1);
+  assert.equal(report.fixes.length, 2);
+  assert.deepEqual(report.fixes.map((fix) => fix.action), ["normalize-crlf", "chmod-executable"]);
 });
 
 test("fix mode retains manual and partially fixed issues", async () => {

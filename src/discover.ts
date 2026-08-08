@@ -3,17 +3,17 @@ import path from "node:path";
 import { isHiddenOrDependencyPath, relativePath } from "./path-utils.js";
 
 export async function discoverFiles(root: string, inputs: string[]): Promise<string[]> {
-  const discovered: string[] = [];
+  const discovered = new Set<string>();
 
   for (const input of inputs) {
     const absolute = path.resolve(root, input);
     await collectPath(root, absolute, discovered);
   }
 
-  return discovered.sort();
+  return [...discovered].sort();
 }
 
-async function collectPath(root: string, current: string, discovered: string[]): Promise<void> {
+async function collectPath(root: string, current: string, discovered: Set<string>): Promise<void> {
   const rel = relativePath(root, current);
   if (isHiddenOrDependencyPath(rel)) {
     return;
@@ -27,6 +27,6 @@ async function collectPath(root: string, current: string, discovered: string[]):
   }
 
   if (stat.isFile()) {
-    discovered.push(current);
+    discovered.add(current);
   }
 }
