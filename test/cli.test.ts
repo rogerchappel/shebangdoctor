@@ -69,6 +69,36 @@ test("read-only mode exits 1 and does not apply fixes", async () => {
   assert.equal(await fs.readFile(script, "utf8"), original);
 });
 
+test("reports env -S without a following interpreter", async () => {
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), "shebangdoctor-cli-"));
+  const script = path.join(root, "invalid.sh");
+  await fs.writeFile(script, "#!/usr/bin/env -S\n", "utf8");
+  await fs.chmod(script, 0o755);
+
+  const result = runCli(["--json", root]);
+  const report = JSON.parse(result.stdout) as { issues: Array<{ code: string }> };
+
+  assert.equal(result.status, 1);
+  assert.deepEqual(report.issues.map((issue) => issue.code).sort(), [
+    "env-shebang-without-argument",
+    "non-portable-interpreter"
+  ]);
+});
+
+test("accepts env -S followed by a portable interpreter", async () => {
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), "shebangdoctor-cli-"));
+  const script = path.join(root, "valid.sh");
+  await fs.writeFile(script, "#!/usr/bin/env -S node --no-warnings\n", "utf8");
+  await fs.chmod(script, 0o755);
+
+  const result = runCli(["--json", root]);
+  const report = JSON.parse(result.stdout) as { scanned: number; issues: unknown[] };
+
+  assert.equal(result.status, 0);
+  assert.equal(report.scanned, 1);
+  assert.deepEqual(report.issues, []);
+});
+
 function runCli(args: string[]) {
   return spawnSync(process.execPath, [cli, ...args], {
     encoding: "utf8"

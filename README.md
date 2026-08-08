@@ -29,6 +29,14 @@ Scan the current repo:
 ./node_modules/.bin/shebangdoctor .
 ```
 
+Pass multiple files or directories to scan them together. Overlapping inputs are
+deduplicated by canonical path, so each discovered file is reported or fixed at
+most once:
+
+```sh
+./node_modules/.bin/shebangdoctor scripts scripts/release
+```
+
 Print JSON for CI or agent workflows:
 
 ```sh
@@ -61,7 +69,9 @@ See [Clean Script Footguns Before CI](docs/tutorials/clean-script-footguns.md) f
 - Shebang scripts that are not executable.
 - CRLF line endings in scripts.
 - Absolute interpreter paths that are likely non-portable.
-- `/usr/bin/env` shebangs missing an interpreter argument.
+- `/usr/bin/env` shebangs missing an interpreter argument. With split-string
+  mode, `-S` must be followed by an interpreter (for example,
+  `#!/usr/bin/env -S node --no-warnings`); `#!/usr/bin/env -S` is invalid.
 
 ## Safety
 
