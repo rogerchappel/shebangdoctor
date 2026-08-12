@@ -47,14 +47,16 @@ export function analyzeShebang(firstLine: string): ShebangAnalysis | null {
   const parts = command.split(/\s+/);
   const interpreter = parts[0] ?? "";
   const usesEnv = interpreter === "/usr/bin/env";
-  const envCommand = usesEnv && parts[1] === "-S" ? parts[2] : parts[1];
+  const usesEnvSplitString = usesEnv && parts[1] === "-S";
+  const envCommand = usesEnvSplitString ? parts[2] : parts[1];
   const envHasArgument = usesEnv && Boolean(envCommand);
+  const envArgumentsArePortable = usesEnvSplitString || parts.length === 2;
 
   return {
     interpreter,
     usesEnv,
     portable: usesEnv
-      ? Boolean(envCommand && ENV_REQUIRED_NAMES.has(envCommand))
+      ? Boolean(envCommand && envArgumentsArePortable && ENV_REQUIRED_NAMES.has(envCommand))
       : ABSOLUTE_PORTABLE_INTERPRETERS.has(command) || ABSOLUTE_PORTABLE_INTERPRETERS.has(interpreter),
     envHasArgument
   };
