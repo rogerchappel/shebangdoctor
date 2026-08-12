@@ -30,3 +30,13 @@ test("flags script-like files without shebangs", () => {
   const issues = detectIssues({ ...baseCandidate, firstLine: "echo hi", hasShebang: false });
   assert.equal(issues.some((issue) => issue.code === "missing-shebang"), true);
 });
+
+test("flags env interpreter arguments without -S as non-portable", () => {
+  const issues = detectIssues({
+    ...baseCandidate,
+    executable: true,
+    firstLine: "#!/usr/bin/env node --no-warnings"
+  });
+
+  assert.deepEqual(issues.map((issue) => issue.code), ["non-portable-interpreter"]);
+});

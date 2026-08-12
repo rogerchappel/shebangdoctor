@@ -7,6 +7,13 @@ test("recognizes env shebangs with portable interpreter names", () => {
   assert.equal(analyzeShebang("#!/usr/bin/env python3")?.portable, true);
 });
 
+test("rejects env interpreter arguments without split-string mode", () => {
+  const analysis = analyzeShebang("#!/usr/bin/env node --no-warnings");
+
+  assert.equal(analysis?.envHasArgument, true);
+  assert.equal(analysis?.portable, false);
+});
+
 test("flags env shebangs without an interpreter argument", () => {
   for (const shebang of ["#!/usr/bin/env", "#!/usr/bin/env -S"]) {
     const analysis = analyzeShebang(shebang);

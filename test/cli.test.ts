@@ -99,6 +99,19 @@ test("accepts env -S followed by a portable interpreter", async () => {
   assert.deepEqual(report.issues, []);
 });
 
+test("reports env interpreter arguments without -S as non-portable", async () => {
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), "shebangdoctor-cli-"));
+  const script = path.join(root, "nonportable.js");
+  await fs.writeFile(script, "#!/usr/bin/env node --no-warnings\n", "utf8");
+  await fs.chmod(script, 0o755);
+
+  const result = runCli(["--json", root]);
+  const report = JSON.parse(result.stdout) as { issues: Array<{ code: string }> };
+
+  assert.equal(result.status, 1);
+  assert.deepEqual(report.issues.map((issue) => issue.code), ["non-portable-interpreter"]);
+});
+
 function runCli(args: string[]) {
   return spawnSync(process.execPath, [cli, ...args], {
     encoding: "utf8"

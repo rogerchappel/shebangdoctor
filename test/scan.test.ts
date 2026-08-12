@@ -38,6 +38,22 @@ test("reports a healthy fixture tree as clean", async () => {
   assert.deepEqual(report.issues, []);
 });
 
+test("distinguishes portable env forms from arguments without -S", async () => {
+  const report = await scan({
+    root: fixturesRoot,
+    paths: ["env-forms"],
+    fix: false,
+    executable: false,
+    json: false
+  });
+
+  assert.equal(report.scanned, 3);
+  assert.deepEqual(
+    report.issues.map(({ code, path: issuePath }) => ({ code, path: issuePath })),
+    [{ code: "non-portable-interpreter", path: "env-forms/bin/arguments-without-s" }]
+  );
+});
+
 test("scans canonical files once across overlapping inputs", async () => {
   const report = await scan({
     root: fixturesRoot,
