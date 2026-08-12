@@ -72,6 +72,9 @@ See [Clean Script Footguns Before CI](docs/tutorials/clean-script-footguns.md) f
 - `/usr/bin/env` shebangs missing an interpreter argument. With split-string
   mode, `-S` must be followed by an interpreter (for example,
   `#!/usr/bin/env -S node --no-warnings`); `#!/usr/bin/env -S` is invalid.
+- `/usr/bin/env` shebangs with interpreter arguments but without `-S` are
+  non-portable. Use `#!/usr/bin/env node` for a single interpreter, or
+  `#!/usr/bin/env -S node --no-warnings` when arguments are required.
 
 ## Safety
 
