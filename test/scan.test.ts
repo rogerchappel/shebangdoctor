@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
@@ -238,3 +239,34 @@ test("read-only mode reports fixable issues without changing files", async () =>
   assert.deepEqual(report.fixes, []);
   assert.equal(await fs.readFile(script, "utf8"), original);
 });
+
+test("read-only and fix scans exclude executable binary files without rewriting them", async () => {
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), "shebangdoctor-"));
+  const binary = path.join(root, "bin", "native-tool");
+  const original = Buffer.from([0x7f, 0x45, 0x4c, 0x46, 0xff, 0x00, 0x70, 0x61, 0x79, 0x6c, 0x6f, 0x61, 0x64, 0x0d, 0x0a]);
+  await fs.mkdir(path.dirname(binary), { recursive: true });
+  await fs.writeFile(binary, original);
+  await fs.chmod(binary, 0o755);
+  const originalHash = sha256(original);
+
+  for (const fix of [false, true]) {
+    const report = await scan({
+      root,
+      paths: ["."],
+      fix,
+      executable: true,
+      json: false
+    });
+
+    assert.equal(report.scanned, 0);
+    assert.deepEqual(report.issues, []);
+    assert.deepEqual(report.fixes, []);
+    const current = await fs.readFile(binary);
+    assert.deepEqual(current, original);
+    assert.equal(sha256(current), originalHash);
+  }
+});
+
+function sha256(content: Buffer): string {
+  return createHash("sha256").update(content).digest("hex");
+}
