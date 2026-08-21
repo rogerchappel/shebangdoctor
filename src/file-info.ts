@@ -11,6 +11,9 @@ export async function readCandidate(root: string, filePath: string): Promise<Can
 
   const rel = relativePath(root, filePath);
   const buffer = await fs.readFile(filePath);
+  if (!isText(buffer)) {
+    return null;
+  }
   const contentStart = buffer.subarray(0, Math.min(buffer.length, 4096)).toString("utf8");
   const firstLineEnd = contentStart.search(/\r?\n/);
   const firstLine = firstLineEnd === -1 ? contentStart : contentStart.slice(0, firstLineEnd);
@@ -31,4 +34,17 @@ export async function readCandidate(root: string, filePath: string): Promise<Can
     hasCrlf: buffer.includes("\r\n"),
     extension: path.extname(filePath)
   };
+}
+
+function isText(buffer: Buffer): boolean {
+  if (buffer.includes(0)) {
+    return false;
+  }
+
+  try {
+    new TextDecoder("utf-8", { fatal: true }).decode(buffer);
+    return true;
+  } catch {
+    return false;
+  }
 }
