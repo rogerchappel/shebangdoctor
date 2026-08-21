@@ -80,6 +80,10 @@ See [Clean Script Footguns Before CI](docs/tutorials/clean-script-footguns.md) f
 
 Default mode is read-only. `--fix` only normalizes CRLF. Chmod changes require both `--fix` and `--executable`; they add the user, group, and other execute bits (`0111`) while preserving all existing permission bits.
 
+Candidate scripts must be valid UTF-8 text without NUL bytes. Executable binary
+files are excluded even when their bytes contain CRLF, so they are never offered
+text fixes or rewritten.
+
 ShebangDoctor does not rewrite shebangs in V1. It reports portability warnings so a human can choose the right interpreter.
 
 ## Exit Codes
