@@ -41,6 +41,26 @@ jobs:
         run: node /tmp/releasebox/bin/releasebox.js check .
       - name: Run release checks
         run: npm run release:check
+      - name: Build release artifact
+        id: pack
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir release-artifacts
+          artifact=$(npm pack --silent --pack-destination release-artifacts)
+          test -n "$artifact"
+          test "$(printf '%s\n' "$artifact" | wc -l)" -eq 1
+          artifact="release-artifacts/$artifact"
+          test -f "$artifact"
+          case "$artifact" in *.tgz) ;; *) exit 1 ;; esac
+          echo "artifact=$artifact" >> "$GITHUB_OUTPUT"
+      - name: Verify release artifact install
+        shell: bash
+        run: |
+          set -euo pipefail
+          consumer=$(mktemp -d)
+          npm install --prefix "$consumer" --ignore-scripts "$GITHUB_WORKSPACE/${{ steps.pack.outputs.artifact }}"
+          "$consumer/node_modules/.bin/shebangdoctor" --help >/dev/null
       - name: Release notes preview
         run: |
           node /tmp/releasebox/bin/releasebox.js notes . > release-notes-preview.md
