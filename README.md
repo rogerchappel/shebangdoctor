@@ -116,9 +116,12 @@ documented CLI entry point.
 
 ## Release Archive Contents
 
-The GitHub release archive includes the compiled CLI, README, docs, license,
-changelog, contributing guide, and security policy. Run `npm run package:smoke`
-to inspect the exact tarball attached to a release.
+The GitHub-only release workflow creates one explicitly named npm tarball and
+attaches that exact artifact to the GitHub release; it does not publish to npm.
+The pull-request dry run creates the artifact through the same single-pack
+contract and verifies a clean, non-publishing install from it. The archive
+includes the compiled CLI, README, docs, license, changelog, contributing guide,
+and security policy. Run `npm run package:smoke` to inspect its contents.
 
 ## Docs
 
