@@ -37,11 +37,22 @@ jobs:
         run: node /tmp/releasebox/bin/releasebox.js check .
       - name: Run release checks
         run: npm run release:check
-      - name: Build package
-        run: npm pack
+      - name: Build release artifact
+        id: pack
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir release-artifacts
+          artifact=$(npm pack --silent --pack-destination release-artifacts)
+          test -n "$artifact"
+          test "$(printf '%s\n' "$artifact" | wc -l)" -eq 1
+          artifact="release-artifacts/$artifact"
+          test -f "$artifact"
+          case "$artifact" in *.tgz) ;; *) exit 1 ;; esac
+          echo "artifact=$artifact" >> "$GITHUB_OUTPUT"
       - name: Generate release notes
         run: node /tmp/releasebox/bin/releasebox.js notes . > RELEASE_NOTES.md
       - name: Create GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "${GITHUB_REF_NAME}" --notes-file RELEASE_NOTES.md *.tgz
+        run: gh release create "${GITHUB_REF_NAME}" --notes-file RELEASE_NOTES.md "${{ steps.pack.outputs.artifact }}"
