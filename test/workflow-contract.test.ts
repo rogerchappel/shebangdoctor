@@ -23,7 +23,7 @@ test("tag release attaches and dry run installs the captured artifact", async ()
   const artifact = "${{ steps.pack.outputs.artifact }}";
 
   assert.match(release, new RegExp(`gh release create[^\\n]+"\\$\\{GITHUB_REF_NAME\\}"[^\\n]+"\\$\\{\\{ steps\\.pack\\.outputs\\.artifact \\}\\}"`));
-  assert.match(dryRun, /npm install --prefix "\$consumer" --ignore-scripts "\$\{\{ steps\.pack\.outputs\.artifact \}\}"/);
+  assert.match(dryRun, /npm install --prefix "\$consumer" --ignore-scripts "\$GITHUB_WORKSPACE\/\$\{\{ steps\.pack\.outputs\.artifact \}\}"/);
   assert.equal(Array.from(release.matchAll(new RegExp(artifact.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g"))).length, 1);
   assert.equal(Array.from(dryRun.matchAll(new RegExp(artifact.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g"))).length, 1);
 });

@@ -59,7 +59,7 @@ jobs:
         run: |
           set -euo pipefail
           consumer=$(mktemp -d)
-          npm install --prefix "$consumer" --ignore-scripts "${{ steps.pack.outputs.artifact }}"
+          npm install --prefix "$consumer" --ignore-scripts "$GITHUB_WORKSPACE/${{ steps.pack.outputs.artifact }}"
           "$consumer/node_modules/.bin/shebangdoctor" --help >/dev/null
       - name: Release notes preview
         run: |
