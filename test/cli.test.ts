@@ -99,6 +99,32 @@ test("accepts env -S followed by a portable interpreter", async () => {
   assert.deepEqual(report.issues, []);
 });
 
+test("skips dangling symlinks and reports valid scripts", async () => {
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), "shebangdoctor-cli-"));
+  const script = path.join(root, "valid.sh");
+  await fs.writeFile(script, "#!/usr/bin/env sh\n", "utf8");
+  await fs.chmod(script, 0o755);
+  await fs.symlink("missing-target", path.join(root, "broken-link"));
+
+  const result = runCli(["--json", root]);
+  const report = JSON.parse(result.stdout) as { ok: boolean; scanned: number; issues: unknown[] };
+
+  assert.equal(result.status, 0);
+  assert.equal(result.stderr, "");
+  assert.equal(report.ok, true);
+  assert.equal(report.scanned, 1);
+  assert.deepEqual(report.issues, []);
+});
+
+test("returns a runtime error for a missing explicit input", async () => {
+  const root = path.join(os.tmpdir(), `shebangdoctor-missing-${process.pid}-${Date.now()}`);
+  const result = runCli([root]);
+
+  assert.equal(result.status, 2);
+  assert.match(result.stderr, /^shebangdoctor: ENOENT:/);
+  assert.equal(result.stdout, "");
+});
+
 test("reports env interpreter arguments without -S as non-portable", async () => {
   const root = await fs.mkdtemp(path.join(os.tmpdir(), "shebangdoctor-cli-"));
   const script = path.join(root, "nonportable.js");

@@ -39,6 +39,42 @@ test("reports a healthy fixture tree as clean", async () => {
   assert.deepEqual(report.issues, []);
 });
 
+test("skips dangling symlinks while scanning valid directory entries", async () => {
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), "shebangdoctor-"));
+  const script = path.join(root, "bin", "healthy.sh");
+  await fs.mkdir(path.dirname(script), { recursive: true });
+  await fs.writeFile(script, "#!/usr/bin/env sh\n", "utf8");
+  await fs.chmod(script, 0o755);
+  await fs.symlink("missing-target", path.join(root, "broken-link"));
+
+  const report = await scan({
+    root,
+    paths: ["."],
+    fix: false,
+    executable: false,
+    json: false
+  });
+
+  assert.equal(report.ok, true);
+  assert.equal(report.scanned, 1);
+  assert.deepEqual(report.issues, []);
+});
+
+test("preserves errors for missing explicit input paths", async () => {
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), "shebangdoctor-"));
+
+  await assert.rejects(
+    scan({
+      root,
+      paths: ["missing-input"],
+      fix: false,
+      executable: false,
+      json: false
+    }),
+    (error: NodeJS.ErrnoException) => error.code === "ENOENT"
+  );
+});
+
 test("distinguishes portable env forms from arguments without -S", async () => {
   const report = await scan({
     root: fixturesRoot,
