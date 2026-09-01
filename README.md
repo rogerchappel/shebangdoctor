@@ -84,6 +84,11 @@ Candidate scripts must be valid UTF-8 text without NUL bytes. Executable binary
 files are excluded even when their bytes contain CRLF, so they are never offered
 text fixes or rewritten.
 
+During recursive directory discovery, entries that disappear or cannot be read
+are skipped so a dangling symlink or concurrent filesystem change does not abort
+the rest of the audit. A path passed explicitly on the command line is different:
+if it is missing or unreadable, ShebangDoctor reports a runtime error and exits 2.
+
 ShebangDoctor does not rewrite shebangs in V1. It reports portability warnings so a human can choose the right interpreter.
 
 ## Exit Codes
