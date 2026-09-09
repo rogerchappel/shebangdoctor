@@ -149,6 +149,38 @@ test("scans extensionless files in nested script directories but ignores ordinar
   ]);
 });
 
+test("ignores library modules while retaining JavaScript command scripts", async () => {
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), "shebangdoctor-"));
+  const library = path.join(root, "src", "library.js");
+  const directoryScript = path.join(root, "scripts", "release.mjs");
+  const shebangScript = path.join(root, "commands", "doctor.cjs");
+  const executableScript = path.join(root, "tools-src", "publish.js");
+  await fs.mkdir(path.dirname(library), { recursive: true });
+  await fs.mkdir(path.dirname(directoryScript), { recursive: true });
+  await fs.mkdir(path.dirname(shebangScript), { recursive: true });
+  await fs.mkdir(path.dirname(executableScript), { recursive: true });
+  await fs.writeFile(library, "export const answer = 42;\n", "utf8");
+  await fs.writeFile(directoryScript, "console.log('release');\n", "utf8");
+  await fs.writeFile(shebangScript, "#!/usr/bin/env node\n", "utf8");
+  await fs.writeFile(executableScript, "console.log('publish');\n", "utf8");
+  await fs.chmod(shebangScript, 0o755);
+  await fs.chmod(executableScript, 0o755);
+
+  const report = await scan({
+    root,
+    paths: ["."],
+    fix: false,
+    executable: false,
+    json: false
+  });
+
+  assert.equal(report.scanned, 3);
+  assert.deepEqual(report.issues.map(({ code, path: issuePath }) => ({ code, path: issuePath })), [
+    { code: "missing-shebang", path: "scripts/release.mjs" },
+    { code: "missing-shebang", path: "tools-src/publish.js" }
+  ]);
+});
+
 test("fix mode normalizes CRLF and adds execute bits without changing other permissions", async () => {
   const root = await fs.mkdtemp(path.join(os.tmpdir(), "shebangdoctor-"));
   await fs.mkdir(path.join(root, "bin"), { recursive: true });
