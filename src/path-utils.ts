@@ -1,5 +1,10 @@
 import path from "node:path";
-import { SCRIPT_DIRECTORIES, SCRIPT_EXTENSIONS, TEXT_SCRIPT_FILENAMES } from "./script-globs.js";
+import {
+  JAVASCRIPT_EXTENSIONS,
+  SCRIPT_DIRECTORIES,
+  SCRIPT_EXTENSIONS,
+  TEXT_SCRIPT_FILENAMES
+} from "./script-globs.js";
 
 export function toPosixPath(value: string): string {
   return value.split(path.sep).join("/");
@@ -33,6 +38,7 @@ export function isScriptLikePath(relative: string): boolean {
   );
 
   return SCRIPT_EXTENSIONS.has(extension) ||
+    (JAVASCRIPT_EXTENSIONS.has(extension) && isInScriptDirectory) ||
     TEXT_SCRIPT_FILENAMES.has(basename) ||
     (extension === "" && isInScriptDirectory);
 }
