@@ -10,10 +10,7 @@ export const SCRIPT_DIRECTORIES = new Set([
 export const SCRIPT_EXTENSIONS = new Set([
   ".bash",
   ".bats",
-  ".cjs",
-  ".js",
   ".ksh",
-  ".mjs",
   ".pl",
   ".ps1",
   ".py",
@@ -21,6 +18,8 @@ export const SCRIPT_EXTENSIONS = new Set([
   ".sh",
   ".zsh"
 ]);
+
+export const JAVASCRIPT_EXTENSIONS = new Set([".cjs", ".js", ".mjs"]);
 
 export const TEXT_SCRIPT_FILENAMES = new Set([
   "configure",
