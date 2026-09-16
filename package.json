@@ -31,7 +31,8 @@
     "smoke": "bash scripts/smoke.sh",
     "package:smoke": "npm pack --dry-run",
     "documented-install:smoke": "bash scripts/documented-install-smoke.sh",
-    "release:check": "npm test && npm run check && npm run build && npm run smoke && npm run package:smoke && npm run documented-install:smoke"
+    "release:check": "npm test && npm run check && npm run build && npm run smoke && npm run package:smoke && npm run documented-install:smoke",
+    "release:readiness": "node scripts/validate-release-readiness.mjs"
   },
   "keywords": [
     "cli",
