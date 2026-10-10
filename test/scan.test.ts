@@ -87,7 +87,10 @@ test("distinguishes portable env forms from arguments without -S", async () => {
   assert.equal(report.scanned, 3);
   assert.deepEqual(
     report.issues.map(({ code, path: issuePath }) => ({ code, path: issuePath })),
-    [{ code: "non-portable-interpreter", path: "env-forms/bin/arguments-without-s" }]
+    [
+      { code: "non-portable-interpreter", path: "env-forms/bin/arguments-with-s" },
+      { code: "non-portable-interpreter", path: "env-forms/bin/arguments-without-s" }
+    ]
   );
 });
 

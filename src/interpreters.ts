@@ -50,7 +50,9 @@ export function analyzeShebang(firstLine: string): ShebangAnalysis | null {
   const usesEnvSplitString = usesEnv && parts[1] === "-S";
   const envCommand = usesEnvSplitString ? parts[2] : parts[1];
   const envHasArgument = usesEnv && Boolean(envCommand);
-  const envArgumentsArePortable = usesEnvSplitString || parts.length === 2;
+  const envArgumentsArePortable = usesEnvSplitString
+    ? parts.length === 3
+    : parts.length === 2;
 
   return {
     interpreter,
