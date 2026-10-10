@@ -23,14 +23,22 @@ test("flags env shebangs without an interpreter argument", () => {
   }
 });
 
-test("recognizes env -S shebangs followed by an interpreter", () => {
+test("rejects env -S shebangs with interpreter options that are not validated", () => {
   const analysis = analyzeShebang("#!/usr/bin/env -S node --no-warnings");
   assert.equal(analysis?.usesEnv, true);
   assert.equal(analysis?.envHasArgument, true);
-  assert.equal(analysis?.portable, true);
+  assert.equal(analysis?.portable, false);
 });
 
 test("flags uncommon absolute interpreter paths", () => {
   const analysis = analyzeShebang("#!/usr/local/bin/bash");
   assert.equal(analysis?.portable, false);
+});
+
+
+test("rejects env -S interpreter options it cannot validate", () => {
+  assert.equal(
+    analyzeShebang("#!/usr/bin/env -S node --this-flag-does-not-exist")?.portable,
+    false
+  );
 });

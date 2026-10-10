@@ -85,18 +85,24 @@ test("reports env -S without a following interpreter", async () => {
   ]);
 });
 
-test("accepts env -S followed by a portable interpreter", async () => {
+test("reports env -S options as non-portable when they are not validated", async () => {
   const root = await fs.mkdtemp(path.join(os.tmpdir(), "shebangdoctor-cli-"));
   const script = path.join(root, "valid.sh");
   await fs.writeFile(script, "#!/usr/bin/env -S node --no-warnings\n", "utf8");
   await fs.chmod(script, 0o755);
 
   const result = runCli(["--json", root]);
-  const report = JSON.parse(result.stdout) as { scanned: number; issues: unknown[] };
+  const report = JSON.parse(result.stdout) as {
+    scanned: number;
+    issues: Array<{ code: string }>;
+  };
 
-  assert.equal(result.status, 0);
+  assert.equal(result.status, 1);
   assert.equal(report.scanned, 1);
-  assert.deepEqual(report.issues, []);
+  assert.deepEqual(
+    report.issues.map(({ code }) => code),
+    ["non-portable-interpreter"]
+  );
 });
 
 test("skips dangling symlinks and reports valid scripts", async () => {
