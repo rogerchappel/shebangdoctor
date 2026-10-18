@@ -42,3 +42,22 @@ test("rejects env -S interpreter options it cannot validate", () => {
     false
   );
 });
+
+test("recognizes documented non-shell env interpreters", () => {
+  for (const interpreter of ["node", "python", "python3", "ruby", "perl", "php", "deno"]) {
+    const analysis = analyzeShebang(`#!/usr/bin/env ${interpreter}`);
+    assert.equal(analysis?.usesEnv, true, interpreter);
+    assert.equal(analysis?.interpreter, "/usr/bin/env", interpreter);
+    assert.equal(analysis?.envHasArgument, true, interpreter);
+    assert.equal(analysis?.portable, true, interpreter);
+  }
+});
+
+test("rejects unsupported env interpreter names consistently", () => {
+  for (const interpreter of ["python2", "nodejs", "custom-runtime"]) {
+    const analysis = analyzeShebang(`#!/usr/bin/env ${interpreter}`);
+    assert.equal(analysis?.usesEnv, true, interpreter);
+    assert.equal(analysis?.envHasArgument, true, interpreter);
+    assert.equal(analysis?.portable, false, interpreter);
+  }
+});
