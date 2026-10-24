@@ -43,6 +43,10 @@ Print JSON for CI or agent workflows:
 ./node_modules/.bin/shebangdoctor --json .
 ```
 
+Tune CI failure thresholds: `--fail-on warning` fails for any reported issue,
+while `--fail-on error` fails only for errors. Without this option, existing
+behavior is unchanged.
+
 Normalize CRLF line endings in detected scripts:
 
 ```sh
