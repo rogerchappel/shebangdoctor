@@ -17,7 +17,7 @@
 
 ## Next Useful Work
 
-- [ ] Add a `--fail-on warning|error` threshold for stricter CI tuning.
+- [x] Add a `--fail-on warning|error` threshold for stricter CI tuning.
 - [ ] Add ignore patterns for generated script directories.
 - [ ] Suggest replacement shebangs for common absolute interpreter paths.
 - [ ] Publish example GitHub Actions snippets.
