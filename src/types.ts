@@ -12,6 +12,7 @@ export interface ScanOptions {
   fix: boolean;
   executable: boolean;
   json: boolean;
+  failOn?: Severity | undefined;
   root: string;
 }
 

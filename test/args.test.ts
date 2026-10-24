@@ -20,3 +20,10 @@ test("parses fix, executable, json, and paths", () => {
 test("rejects unknown options", () => {
   assert.throws(() => parseArgs(["--wat"], "/repo"), /Unknown option/);
 });
+
+test("parses and validates fail-on threshold", () => {
+  assert.equal(parseArgs(["--fail-on", "warning"], "/repo").failOn, "warning");
+  assert.equal(parseArgs(["--fail-on", "error"], "/repo").failOn, "error");
+  assert.throws(() => parseArgs(["--fail-on", "fatal"], "/repo"), /requires warning or error/);
+  assert.throws(() => parseArgs(["--fail-on"], "/repo"), /requires warning or error/);
+});

@@ -149,3 +149,11 @@ function runCli(args: string[]) {
     encoding: "utf8"
   });
 }
+
+test("fail-on warning and error thresholds preserve the default exit behavior", async () => {
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), "shebangdoctor-cli-"));
+  await fs.writeFile(path.join(root, "warn.sh"), "#!/usr/local/bin/python\n", "utf8");
+  assert.equal(runCli([root]).status, 1);
+  assert.equal(runCli(["--fail-on", "error", root]).status, 1);
+  assert.equal(runCli(["--fail-on", "warning", root]).status, 1);
+});

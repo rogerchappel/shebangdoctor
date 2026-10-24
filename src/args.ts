@@ -13,6 +13,7 @@ export function parseArgs(argv: string[], root = process.cwd()): ParsedArgs {
   let json = false;
   let help = false;
   let version = false;
+  let failOn: "warning" | "error" | undefined;
 
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];
@@ -26,6 +27,12 @@ export function parseArgs(argv: string[], root = process.cwd()): ParsedArgs {
       case "--json":
         json = true;
         break;
+      case "--fail-on": {
+        const value = argv[++index];
+        if (value !== "warning" && value !== "error") throw new Error("--fail-on requires warning or error");
+        failOn = value;
+        break;
+      }
       case "--help":
       case "-h":
         help = true;
@@ -53,6 +60,7 @@ export function parseArgs(argv: string[], root = process.cwd()): ParsedArgs {
     fix,
     executable,
     json,
+    failOn,
     help,
     version,
     root: path.resolve(root)
@@ -67,6 +75,7 @@ Usage:
 
 Options:
   --json          Print a machine-readable report.
+  --fail-on LEVEL Exit 1 for issues at LEVEL or higher (warning or error).
   --fix           Normalize CRLF line endings in detected scripts.
   --executable    With --fix, add execute bits (0111) while preserving existing permissions.
   -h, --help      Show help.
