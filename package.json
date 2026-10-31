@@ -52,7 +52,7 @@
   },
   "homepage": "https://github.com/rogerchappel/shebangdoctor#readme",
   "engines": {
-    "node": ">=20"
+    "node": ">=20 <23"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",
