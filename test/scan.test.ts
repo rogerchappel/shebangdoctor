@@ -69,6 +69,7 @@ test("does not follow symlinked files or directories outside the scan root", asy
   const inside = path.join(root, "bin", "inside.sh");
   const external = path.join(outside, "external.sh");
   await fs.writeFile(inside, "#!/usr/bin/env sh\n", "utf8");
+  await fs.chmod(inside, 0o755);
   await fs.writeFile(external, "#!/usr/bin/env sh\n", "utf8");
   await fs.symlink(external, path.join(root, "bin", "linked-file.sh"));
   await fs.symlink(outside, path.join(root, "linked-directory"));
