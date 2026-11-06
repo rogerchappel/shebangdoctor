@@ -25,7 +25,7 @@ async function collectPath(
   }
 
   try {
-    const stat = await fs.stat(current);
+    const stat = await fs.lstat(current);
     if (stat.isDirectory()) {
       const entries = await fs.readdir(current);
       await Promise.all(entries.map((entry) => collectPath(root, path.join(current, entry), discovered)));
