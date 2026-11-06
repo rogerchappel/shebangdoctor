@@ -60,6 +60,24 @@ test("skips dangling symlinks while scanning valid directory entries", async () 
   assert.deepEqual(report.issues, []);
 });
 
+test("does not follow symlinked files or directories outside the scan root", async () => {
+  const parent = await fs.mkdtemp(path.join(os.tmpdir(), "shebangdoctor-"));
+  const root = path.join(parent, "root");
+  const outside = path.join(parent, "outside");
+  await fs.mkdir(path.join(root, "bin"), { recursive: true });
+  await fs.mkdir(outside);
+  const inside = path.join(root, "bin", "inside.sh");
+  const external = path.join(outside, "external.sh");
+  await fs.writeFile(inside, "#!/usr/bin/env sh\n", "utf8");
+  await fs.writeFile(external, "#!/usr/bin/env sh\n", "utf8");
+  await fs.symlink(external, path.join(root, "bin", "linked-file.sh"));
+  await fs.symlink(outside, path.join(root, "linked-directory"));
+
+  const report = await scan({ root, paths: ["."], fix: false, executable: false, json: false });
+  assert.equal(report.scanned, 1);
+  assert.deepEqual(report.issues, []);
+});
+
 test("preserves errors for missing explicit input paths", async () => {
   const root = await fs.mkdtemp(path.join(os.tmpdir(), "shebangdoctor-"));
 
